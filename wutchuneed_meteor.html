@@ -1,0 +1,112 @@
+<head>
+  <title>wutchuneed_meteor</title>
+</head>
+
+<body>
+  <div class="login-container">
+    {{> loginButtons}}
+  </div>
+
+  <div class="lists-container">
+
+    <div>
+      {{> lists }}
+    </div>
+
+    {{ #if currentList }}
+      <div>
+        <ul>
+          {{> listDetail list = currentList}}
+        </ul>
+      </div>
+    {{ /if }}
+  </div>
+
+</body>
+
+<template name="lists">
+  {{ #if currentUser }}
+    {{ #unless currentList }}
+      <span class="lists-title">Lists</span>
+      <form class="new-list">
+        <input type="text" name="name" placeholder="Add a new list" />
+        <input type="submit" value="&plus;"/>
+      </form>
+      <ul class="list-of-lists">
+        {{#each allLists}}
+          {{> list}}
+        {{/each}}
+      </ul>
+    {{ else }}
+      <span class="lists-title minimized">&lt; Lists</span>
+    {{ /unless }}
+  {{ /if }}
+</template>
+
+<template name="list">
+  <li class="list-item {{#if isCurrent _id}}current-list{{/if}}">
+    <span class="list-name">
+      {{ name }}
+    </span>
+    <button class="delete">&times;</button>
+  </li>
+</template>
+
+<template name="listDetail">
+  <span class="list-detail-title">
+    {{ list.name }}
+  </span>
+  {{ #if list.adding }}
+    <button class="checkout">check out</button>
+  {{ /if }}
+  <form class="new-category">
+    <input type="text" name="name" placeholder="Add a new category" />
+    <input type="submit" value="&plus;"/>
+  </form>
+  <ul class="categories">
+    {{#each myCategories}}
+      {{> category}}
+    {{/each}}
+  </ul>
+</template>
+
+<template name="category">
+  <li class="category {{#if isEmpty}}empty-category{{/if}}">
+    <span class="category-title">
+      {{ name }}
+    </span>
+    <button class="add-item">&plus;</button>
+    {{ #unless isEmpty }}
+      <button class="delete" disabled title="Can't delete a category that contians items">&times;</button>
+    {{ else }}
+      <button class="delete">&times;</button>
+    {{ /unless }}
+    {{ #if showForm }}
+      <br />
+      <form class="new-item">
+        <input class="item-name-input" type="text" name="name" placeholder="Name" />
+        <input class="item-quantity-input" type="text" name="quantity" placeholder="Quantity" />
+        <input class="item-measure-input" type="text" name="measure" placeholder="Measure" />
+        <input type="submit" value="&plus;"/>
+      </form>
+    {{ /if }}
+    {{ #unless isEmpty }}
+      <ul class="items">
+        {{#each myItems}}
+          {{> item}}
+        {{/each}}
+      </ul>
+    {{ /unless }}
+  </li>
+</template>
+
+<template name="item">
+  <li class="item">
+    <span class="item-name {{#if inCart}}in-cart{{/if}}">
+      {{ name }}
+      ({{ #if quantity }} {{ quantity }} {{ /if }}
+      {{ #if measure }} {{ measure }} {{ /if }})
+    </span>
+    <button class="delete">&times;</button>
+  </li>
+</template>
